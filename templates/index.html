@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>CCTV & Infra Scanner Pro</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#6366f1">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="theme-switch">
+                <button class="theme-btn" id="themeToggle" onclick="toggleTheme()" title="Toggle Light/Dark Mode">
+                    🌓
+                </button>
+            </div>
+            <h1>📡 CCTV & Infra Scanner Pro</h1>
+            <p>Advanced real-time detection for security & infrastructure</p>
+            <div class="device-badge" id="deviceType">Detecting system environment...</div>
+            <div style="margin-top: 20px;">
+                <button onclick="exitSystem()" class="btn-secondary" style="background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.3); color: #ff6b6b; flex: none; width: auto; display: inline-flex;">
+                    ⏹ Stop & Exit
+                </button>
+            </div>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('network', this)">🌐 Network Scan</button>
+            <button class="tab-btn" onclick="switchTab('traffic', this)">🚦 Traffic Scan</button>
+            <button class="tab-btn" onclick="switchTab('sensor', this)">📱 Sensor Scan</button>
+            <button class="tab-btn" onclick="switchTab('results', this)">📊 Results</button>
+        </div>
+
+        <!-- Network Scan Tab -->
+        <div id="network-tab" class="tab-content active">
+            <div class="card">
+                <h3>🌐 Network Camera Detection</h3>
+                <p>Scan your local network for IP cameras and CCTV devices</p>
+                
+                <div class="network-info" id="networkInfo">
+                    <p>Loading network information...</p>
+                </div>
+                
+                <div class="scan-controls">
+                    <button id="startNetworkScan" class="btn-primary" onclick="startNetworkScan()">
+                        Start Network Scan
+                    </button>
+                    <button id="stopNetworkScan" class="btn-secondary" onclick="stopNetworkScan()" disabled>
+                        Stop Scan
+                    </button>
+                </div>
+
+                <div class="progress-container" id="scanProgress" style="display: none;">
+                    <div class="progress-track">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-secondary);">
+                        <span id="progressText">Status: Initializing</span>
+                        <span id="currentTarget">Targeting: ...</span>
+                    </div>
+                </div>
+
+                <div id="networkResults" class="results-container">
+                    <!-- Results will be inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <div id="traffic-tab" class="tab-content">
+            <div class="card">
+                <h3>🚦 Infrastructure Scan</h3>
+                <p>Scan for WAN-based traffic controllers and industrial IoT systems.</p>
+                
+                <div class="alert alert-warning">
+                    ⚠️ <strong>Restricted:</strong> This identifies industrial ports (SNMP/Modbus). Use only on authorized infrastructure.
+                </div>
+
+                <div class="scan-controls">
+                    <div style="margin-bottom: 20px; width: 100%;">
+                        <label style="font-size: 0.85rem; font-weight: 600; text-transform: uppercase; color: var(--text-secondary);">Target IP/Range</label>
+                        <input type="text" id="trafficRange" placeholder="e.g. 192.168.1.0/24" value="192.168.1.0/24" style="width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--card-border); background: var(--bg-secondary); color: var(--text-primary); margin-top: 8px;">
+                    </div>
+                    <button id="startTrafficScan" class="btn-primary" onclick="startTrafficScan()">
+                        ⚡ Scan Infrastructure
+                    </button>
+                    <button id="stopTrafficScan" class="btn-secondary" onclick="stopTrafficScan()" disabled>
+                        ⏹ Stop
+                    </button>
+                </div>
+
+                <div class="progress-container" id="trafficProgress" style="display: none;">
+                    <div class="progress-track">
+                        <div class="progress-bar" id="trafficProgressBar"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-secondary);">
+                        <span id="trafficProgressText">Status: Analyzing</span>
+                        <span id="trafficCurrentTarget">Target: ...</span>
+                    </div>
+                </div>
+
+                <div id="trafficResults" class="results-container">
+                    <!-- Results will be inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <div id="sensor-tab" class="tab-content">
+            <div class="card">
+                <h3>📱 Hardware Sensor Scan</h3>
+                <p>Utilize onboard magnetometer and AI light detection to find localized hidden threats.</p>
+
+                <div class="scan-controls">
+                    <button id="startSensorScan" class="btn-primary" onclick="startSensorScan()">
+                        🎛 Calibrate & Scan
+                    </button>
+                    <button id="stopSensorScan" class="btn-secondary" onclick="stopSensorScan()" disabled>
+                        ⏹ Stop
+                    </button>
+                </div>
+
+                <div class="sensor-status" id="sensorStatus">
+                    <p>Idle - Ready for calibration</p>
+                </div>
+
+                <div id="sensorResults" class="results-container">
+                    <!-- Sensor results will be inserted here -->
+                </div>
+
+                <div class="alert alert-success" style="margin-top: 30px; display: block;">
+                    <strong>💡 Tips:</strong> Move slowly around the perimeter. Check smoke detectors, outlets, and reflective surfaces.
+                </div>
+            </div>
+        </div>
+
+        <div id="results-tab" class="tab-content">
+            <div class="card" style="min-height: 300px;">
+                <h3>📊 Master Activity Log</h3>
+                <div id="allResults">
+                    <!-- All results combined -->
+                </div>
+                <div style="margin-top: 30px; display: flex; gap: 10px;">
+                    <button onclick="exportResults()" class="btn-primary">📤 Export to JSON</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="cameraPreviewModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span style="position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: var(--text-secondary);" onclick="closeModal()">&times;</span>
+                <h3 style="margin-bottom: 20px;">🖼️ Camera Live View</h3>
+                <div style="border-radius: 16px; overflow: hidden; background: #000;">
+                    <img id="previewImage" src="" alt="Stream Preview" style="width: 100%; display: block;">
+                </div>
+                <div style="margin-top: 20px; font-size: 0.85rem; color: var(--text-secondary);">
+                    Stream authentication required for full resolution.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="/static/js/main.js"></script>
+    <script src="/static/js/network-scan.js"></script>
+    <script src="/static/js/sensor-scan.js"></script>
+</body>
+</html>
