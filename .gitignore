@@ -36,5 +36,24 @@ venv.bak/
 *.swo
 .DS_Store
 Thumbs.db
+
+# Logs and Data
+*.log
 cloudflare.log
 test_cloudflare.log
+app.log
+
+# Databases
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+
+# Secrets & Configurations
+*.json
+*.yml
+*.yaml
+config.yml
+credentials.json
+secrets/
+private_keys/
