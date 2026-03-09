@@ -12,6 +12,10 @@ import subprocess
 import platform
 import re
 import atexit
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 from scanner import NetworkCameraScanner
 
@@ -63,14 +67,14 @@ def start_cloudflare_tunnel():
 
     threading.Thread(target=run_cf, daemon=True).start()
 
-app.config['SECRET_KEY'] = 'camera-detector-secret-key'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'fallback-secret-change-me')
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 # Store active scans
 active_scans = {}
 
-# Nmap path (if not in system PATH)
-NMAP_PATH = r"C:\Program Files (x86)\Nmap"
+# Nmap path - loaded from .env
+NMAP_PATH = os.getenv('NMAP_PATH', r"C:\Program Files (x86)\Nmap")
 
 @app.route('/')
 def index():
