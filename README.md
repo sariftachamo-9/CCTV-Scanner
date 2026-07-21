@@ -4,7 +4,7 @@ An advanced, real-time security scanning tool designed for the identification, a
 
 ---
 
-## Table of Contents
+## Table of Contents 
 1. [Description](#description)
 2. [Features](#features)
 3. [Tech Stack](#tech-stack)
